@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 
 
 
-export const IsAuthentics = async(req, res, next) =>{
+exports.IsAuthentics = async(req, res, next) =>{
     try {
         const token = req.cookies.token 
         if(!token){

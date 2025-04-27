@@ -8,5 +8,4 @@ const GetDataUri = (file) =>{
     return Parser.format(extname, file.buffer).content
 }
 
-
 module.exports = GetDataUri

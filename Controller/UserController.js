@@ -1,6 +1,6 @@
 const User = require("../model/user.model");
-const GetDataUri = require("../utils/dataUri");
-const cloudinary = require("../utils/Cloudinary");
+const GetDataUri = require("../utlis/dataUri");
+const cloudinary = require("../utlis/cloudinaryImage.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -118,6 +118,23 @@ exports.logout = async (_, res) => {
     }
 };
 
+
+exports.getProfile = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        let user = await User.findById(userId).populate({path:'posts', createdAt:-1}).populate('bookmarks');
+        return res.status(200).json({
+            user,
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+
+
 // Controller for editing user profile
 exports.editProfile = async (req, res) => {
     try {
@@ -127,8 +144,8 @@ exports.editProfile = async (req, res) => {
 
         if (profilePicture) {
             const fileUri = GetDataUri(profilePicture);
-            cloudResponse = await cloudinary.uploads.upload(fileUri);
-        }
+            cloudResponse = await cloudinary.uploader.upload(fileUri);
+                }
 
         const user = await User.findById(req.userId).select("-password");
         if (!user) {
