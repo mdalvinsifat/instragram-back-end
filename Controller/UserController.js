@@ -70,7 +70,7 @@ exports.LoginController = async (req, res) => {
             });
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ userId: user._id }, process.env.JWT, {
             expiresIn: "1d",
         });
 
@@ -122,7 +122,7 @@ exports.logout = async (_, res) => {
 exports.getProfile = async (req, res) => {
     try {
         const userId = req.params.id;
-        let user = await User.findById(userId).populate({path:'posts', createdAt:-1}).populate('bookmarks');
+        let user = await User.findById(userId).select("-password")
         return res.status(200).json({
             user,
             success: true
@@ -147,7 +147,7 @@ exports.editProfile = async (req, res) => {
             cloudResponse = await cloudinary.uploader.upload(fileUri);
                 }
 
-        const user = await User.findById(req.userId).select("-password");
+                const user = await User.findById(req.userId).select("-password");
         if (!user) {
             return res.status(404).json({
                 success: false,
