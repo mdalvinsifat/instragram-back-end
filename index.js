@@ -15,6 +15,14 @@
     app.use(express.urlencoded({extended:true}))
     app.use(cookieParser()); // 🔥 this line is very important
 
+
+
+    const corsOptions = {
+        origin: process.env.URL,
+        credentials: true,
+    };
+    app.use(cors(corsOptions));
+    
     dotenv.config()
     app.use( morgan("dev"))
 
