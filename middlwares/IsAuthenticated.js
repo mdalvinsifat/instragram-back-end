@@ -1,18 +1,40 @@
 const jwt = require("jsonwebtoken");
 
-exports.IsAuthentics = async (req, res, next) => {
+
+
+const IsAuthenticated = async(req, res, next) =>{
+
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+    
+
+    const token = req.cookies.token; 
+    if(!token){
+      return res.status(401).json({
+        message:'User not authenticated',
+        success:false
+    });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT);
-    req.userId = decoded.userId; // <-- THIS IS IMPORTANT
 
+    const decode = await jwt.verify(token, process.env.JWT)
+    if(!decode){
+      return res.status(401).json({
+        message:'Invalid',
+        success:false
+    });
+    }
+
+
+    req.id = decode.userId;
     next();
+
   } catch (error) {
-    console.error("Error in IsAuthentics middleware:", error);
-    return res.status(401).json({ success: false, message: "Invalid token" });
+    console.log(error)
+
   }
-};
+
+}
+
+
+
+module.exports = IsAuthenticated

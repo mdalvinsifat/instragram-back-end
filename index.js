@@ -6,7 +6,7 @@
     const ConnectDB = require("./Config/ConnectDB")
     const router = require("./route/user.route")
     const cookieParser = require('cookie-parser');
-
+    const Post = require("./route/PostRoute")
 
 
     const app = express()
@@ -15,18 +15,18 @@
     app.use(express.urlencoded({extended:true}))
     app.use(cookieParser()); // 🔥 this line is very important
 
-
-
-    const corsOptions = {
-        origin: process.env.URL,
-        credentials: true,
-    };
-    app.use(cors(corsOptions));
+    app.use(cors({
+        origin: 'http://localhost:5173', // adjust if needed
+        credentials: true
+      }));
+      
     
     dotenv.config()
     app.use( morgan("dev"))
 
     app.use("/auth", router)
+    app.use("/post", Post)
+
     const PORT = process.env.PORT || 3000 
     ConnectDB()
     app.listen(PORT , () => console.log(`http://localhost:${PORT}`.bgGreen))
