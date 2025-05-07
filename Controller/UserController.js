@@ -180,12 +180,11 @@ exports.getSuggestedUsers = async (req, res) => {
         const suggestedUsers = await User.find({ _id: { $ne: req.userId } }).select(
             "-password"
         );
-        if (!suggestedUsers || suggestedUsers.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No suggested users found.",
-            });
-        }
+        if (!suggestedUsers) {
+            return res.status(400).json({
+                message: 'Currently do not have any users',
+            })
+        };
         return res.status(200).json({
             success: true,
             users: suggestedUsers,

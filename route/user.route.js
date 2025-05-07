@@ -8,7 +8,7 @@ const router = express.Router()
 router.post("/register", RegisterController)
 router.post("/login", LoginController)
 router.post("/edit", IsAuthenticated, uploads.single("profilePicture"), editProfile) // 🔥
-router.get("/suggest", IsAuthenticated, getSuggestedUsers)
+router.get("/suggested-user", IsAuthenticated, getSuggestedUsers)
 router.post("/followers/:id", IsAuthenticated, followOrUnfollow)
 router.get("/logOut", logout)
 router.get("/:id/profile", IsAuthenticated, getProfile) // 🔥
