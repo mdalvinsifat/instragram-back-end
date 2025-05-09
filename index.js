@@ -31,6 +31,10 @@ app.use("/chat", Message);
 
 const PORT = process.env.PORT || 3000;
 
+app.get('/', (req, res) => {
+  res.send('GET request to the homepage')
+})
+
 ConnectDB();
 
 server.listen(PORT, () => {
