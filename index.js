@@ -1,32 +1,38 @@
-    const express = require("express")
-    const cors = require("cors")
-    const dotenv = require('dotenv')
-    const morgan = require("morgan")
-    const colors = require("colors")
-    const ConnectDB = require("./Config/ConnectDB")
-    const router = require("./route/user.route")
-    const cookieParser = require('cookie-parser');
-    const Post = require("./route/PostRoute")
+const express = require("express"); // ✅ Fix for "express is not defined"
+const dotenv = require("dotenv");
+dotenv.config();
 
+const { app, server } = require("./socket/socket"); // ✅ Use shared app and server
+const cors = require("cors");
+const morgan = require("morgan");
+const colors = require("colors");
+const ConnectDB = require("./Config/ConnectDB");
+const router = require("./route/user.route");
+const cookieParser = require("cookie-parser");
+const Post = require("./route/PostRoute");
+const Message = require("./route/MessageRoute");
 
-    const app = express()
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-    app.use(express.json())
-    app.use(express.urlencoded({extended:true}))
-    app.use(cookieParser()); // 🔥 this line is very important
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-    app.use(cors({
-        origin: 'http://localhost:5173', // adjust if needed
-        credentials: true
-      }));
-      
-    
-    dotenv.config()
-    app.use( morgan("dev"))
+app.use(morgan("dev"));
 
-    app.use("/auth", router)
-    app.use("/post", Post)
+app.use("/auth", router);
+app.use("/post", Post);
+app.use("/chat", Message);
 
-    const PORT = process.env.PORT || 3000 
-    ConnectDB()
-    app.listen(PORT , () => console.log(`http://localhost:${PORT}`.bgGreen))
+const PORT = process.env.PORT || 3000;
+
+ConnectDB();
+
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`.bgGreen);
+});

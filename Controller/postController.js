@@ -3,6 +3,7 @@
   const Post = require("../model/post.model");
   const User = require("../model/user.model");
   const Comment = require("../model/comment.model");
+const { getReceiverSocketId, io } = require("../socket/socket");
 
   // Add a new post
   exports.addNewPost = async (req, res) => {
@@ -109,6 +110,25 @@
       await post.updateOne({ $addToSet: { likes: userId } });
       await post.save();
 
+        const user = await User.findById(userId).select('username profilePicture');
+
+           const postOwnerId = post.author.toString();
+        if(postOwnerId !== userId){
+            // emit a notification event
+            const notification = {
+                type:'like',
+                userId:userId,
+                userDetails:user,
+                postId,
+                message:'Your post was liked'
+            }
+
+            const postOwnerSocketIo = getReceiverSocketId(postOwnerId)
+                    io.to(postOwnerSocketId).emit('notification', notification);
+          }
+
+
+
       return res.status(200).json({ message: "Post liked", success: true });
     } catch (error) {
       console.error("Like Post Error:", error);
@@ -128,6 +148,23 @@
       await post.updateOne({ $pull: { likes: userId } });
       await post.save();
 
+      
+   const user = await User.findById(userId).select('username profilePicture');
+
+           const postOwnerId = post.author.toString();
+        if(postOwnerId !== userId){
+            // emit a notification event
+            const notification = {
+                type:'dislike',
+                userId:userId,
+                userDetails:user,
+                postId,
+                message:'Your post was dislike'
+            }
+
+            const postOwnerSocketIo = getReceiverSocketId(postOwnerId)
+                    io.to(postOwnerSocketId).emit('notification', notification);
+          }
       return res.status(200).json({ message: "Post disliked", success: true });
     } catch (error) {
       console.error("Dislike Post Error:", error);

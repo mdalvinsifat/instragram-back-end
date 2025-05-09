@@ -138,6 +138,7 @@ exports.getProfile = async (req, res) => {
 // Controller for editing user profile
 exports.editProfile = async (req, res) => {
     try {
+        const userId =req.id
         const { bio, gender } = req.body;
         const profilePicture = req.file;
         let cloudResponse;
@@ -147,7 +148,7 @@ exports.editProfile = async (req, res) => {
             cloudResponse = await cloudinary.uploader.upload(fileUri);
                 }
 
-                const user = await User.findById(req.userId).select("-password");
+                const user = await User.findById(userId).select("-password");
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -177,9 +178,7 @@ exports.editProfile = async (req, res) => {
 // Controller for getting suggested users (excluding current user)
 exports.getSuggestedUsers = async (req, res) => {
     try {
-        const suggestedUsers = await User.find({ _id: { $ne: req.userId } }).select(
-            "-password"
-        );
+        const suggestedUsers = await User.find({ _id: { $ne: req.id } }).select("-password");
         if (!suggestedUsers) {
             return res.status(400).json({
                 message: 'Currently do not have any users',
@@ -187,16 +186,13 @@ exports.getSuggestedUsers = async (req, res) => {
         };
         return res.status(200).json({
             success: true,
-            users: suggestedUsers,
-        });
+            users: suggestedUsers
+        })
     } catch (error) {
-        console.error("Error in getting suggested users:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Error fetching suggested users.",
-        });
+        console.log(error);
     }
 };
+
 
 // Controller for following or unfollowing a user
 exports.followOrUnfollow = async (req, res) => {
