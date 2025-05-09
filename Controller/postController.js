@@ -2,7 +2,7 @@ const sharp = require("sharp");
 const cloudinary = require("../utlis/cloudinaryImage");
 const Post = require("../model/post.model");
 const User = require("../model/user.model");
-const Comment = require("../model/comment.model");
+const Comment = require("../model/Comment.model");
 const { getReceiverSocketId, io } = require("../socket/socket");
 
 // Add a new post
