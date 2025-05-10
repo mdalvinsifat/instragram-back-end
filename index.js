@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://instragram-front-end-4ln5.vercel.app",
     credentials: true,
   })
 );
