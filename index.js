@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-  origin: ['https://instragram-front-end-p.onrender.com'],
+  origin: ['https://instragram-front-end-git-main-alvin-sifats-projects.vercel.app'],
     credentials: true,
   })
 );
