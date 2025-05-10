@@ -9,7 +9,7 @@ const server = http.createServer(app); // ❗ Create server manually
 
 const io = new Server(server, {
   cors: {
-    origin: "https://instragram-back-end-p.onrender.com",
+    origin: "https://instragram-front-end-git-main-alvin-sifats-projects.vercel.app",
     methods: ["GET", "POST"],
     credentials: true
   }
