@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-        origin: "*",
+        origin: "https://instragram-front-end-p.onrender.com",
     credentials: true,
   })
 );
